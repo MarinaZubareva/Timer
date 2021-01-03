@@ -4,8 +4,9 @@ import lombok.Data;
 import my.timer.memento.Memento;
 import my.timer.model.ResponseTimer;
 import my.timer.model.Timer;
-import my.timer.observer.IObservable;
-import my.timer.observer.IObserver;
+import my.timer.observer.Observable;
+import my.timer.observer.Observer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,9 +20,13 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
-public class TimersService implements IObservable {
+public class TimersService implements Observable {
+
+    @Autowired
+    Memento memento;
+
     private List<Timer> timers = new ArrayList<>();
-    public Set<IObserver> observers = new HashSet<>();
+    public Set<Observer> observers = new HashSet<>();
 
     public Iterable<ResponseTimer> list() {
         return timers.stream().map(ResponseTimer::new).collect(Collectors.toList());
@@ -67,32 +72,37 @@ public class TimersService implements IObservable {
     }
 
 
-    public void add(IObserver iObserver) {
-        observers.add(iObserver);
+    public void add(Observer observer) {
+        observers.add(observer);
     }
 
-    public void remove(IObserver iObserver) {
-        observers.remove(iObserver);
+    public void remove(Observer observer) {
+        observers.remove(observer);
     }
 
     public void notifyObserver() {
-        observers.forEach(IObserver::update);
+        observers.forEach(Observer::update);
     }
 
     @PreDestroy
     public void shutDown() {
         System.out.println("Shut down Timer Service");
-        Memento memento = new Memento();
-        memento.backup(this);
+        memento.backupToDb();
+        //   memento.backup(); backup from file
     }
 
     @PostConstruct
     public void init() {
         System.out.println("Initialize Timer Service");
-        Memento memento = new Memento();
-        List<Timer> timers = memento.restore();
+        List<Timer> timers = memento.restoreFromDb();
+
+    //    List<Timer> timers = memento.restore(); restore from file
         if (timers != null) this.timers = new ArrayList<>(timers);
     }
 
+    public void debug() {
+        memento.backupToDb();
+
+    }
 }
 

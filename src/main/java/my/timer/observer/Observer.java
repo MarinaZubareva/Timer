@@ -1,6 +1,6 @@
 package my.timer.observer;
 // interface for Observer
 
-public interface IObserver {
+public interface Observer {
     void update();
 }

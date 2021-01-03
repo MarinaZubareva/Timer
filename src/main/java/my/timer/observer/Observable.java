@@ -5,12 +5,12 @@ import java.util.Set;
 // interface for Observable,
 //
 
-public interface IObservable {
+public interface Observable {
     Set observers = null;
 
-    void add(IObserver iObserver);
+    void add(Observer observer);
 
-    void remove(IObserver iObserver);
+    void remove(Observer observer);
 
     void notifyObserver();
 }

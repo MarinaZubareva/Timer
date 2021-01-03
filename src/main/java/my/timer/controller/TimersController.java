@@ -1,6 +1,5 @@
 package my.timer.controller;
 
-import lombok.AllArgsConstructor;
 import my.timer.model.ResponseTimer;
 import my.timer.service.TimersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +25,10 @@ public class TimersController {
     @GetMapping("/list")
     public Iterable<ResponseTimer> list() {
         return timerService.list();
+    }
+
+    @GetMapping("/debug")
+    public void debug() {
+        timerService.debug();
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 
-public class TimerObserver implements IObserver {
+public class TimerObserver implements Observer {
     TimersService timersService;
     List<String> timersNames;
 
